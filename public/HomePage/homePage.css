@@ -1,0 +1,251 @@
+.main__banner {
+  width: 100%;
+  position: relative;
+}
+.main__banner .banner__img {
+  width: 100%;
+  height: calc(100vh - 90px);
+}
+.main__banner .banner__img img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+.main__banner .banner__title {
+  position: absolute;
+  width: 40%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.main__banner .banner__title .title {
+  color: #e3bc3f;
+}
+.main__banner .banner__title .desc {
+  color: #fff;
+}
+.main__banner .banner__title .banner__buttons {
+  display: flex;
+  gap: 16px;
+}
+.main__banner .banner__title .banner__buttons .button-lg {
+  background-color: #0a0629;
+}
+.main__banner .banner__title .banner__buttons-login {
+  color: #fff;
+  border: 1px solid #e3bc3f;
+  transition: color 0.3s ease;
+}
+.main__banner .banner__title .banner__buttons-login:hover {
+  color: #e3bc3f;
+}
+.main__banner .banner__title .banner__buttons-register {
+  color: #0a0629;
+  background-color: #e3bc3f !important;
+}
+.main__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #0a0629;
+  color: #fff;
+  width: 100%;
+  height: 150px;
+  position: relative;
+  border: 1px solid #e3bc3f;
+}
+.main__total::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  background-color: #e3bc3f;
+  width: 64px;
+  height: 100%;
+  -webkit-clip-path: polygon(0 0, 72% 0, 100% 100%, 0% 100%);
+          clip-path: polygon(0 0, 72% 0, 100% 100%, 0% 100%);
+}
+.main__total::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  background-color: #e3bc3f;
+  width: 64px;
+  height: 100%;
+  -webkit-clip-path: polygon(32% 0, 100% 0, 100% 100%, 0% 100%);
+          clip-path: polygon(32% 0, 100% 0, 100% 100%, 0% 100%);
+}
+.main__total .total__item {
+  display: flex;
+  gap: 12px;
+}
+.main__total .total__item p {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+.main__total .total__item p:last-child {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: #fff;
+}
+.main__games {
+  background-color: #01162f;
+  color: #fff;
+  padding: 6rem 0;
+}
+.main__games-title {
+  width: 50%;
+  text-align: center;
+  margin: 0 auto;
+}
+.main__games-title h2 {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.main__games-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  -moz-column-gap: 2rem;
+       column-gap: 2rem;
+  row-gap: 2rem;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.main__games-container .game {
+  position: relative;
+}
+.main__games-container .game:hover .game__button {
+  display: block;
+}
+.main__games-container .game__img {
+  width: 100%;
+  height: 100%;
+}
+.main__games-container .game__img img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+.main__games-container .game__content {
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 80%;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.main__games-container .game__content-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.main__games-container .game__button {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: display 0.3s ease;
+}
+.main__games-container .game__button a {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e3bc3f;
+  color: #fff;
+  text-decoration: none;
+}
+.main__about {
+  background-color: #0a0629;
+}
+.main__about .about {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  color: #fff;
+}
+.main__about .about .about__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.main__about .about .about__content h2 {
+  font-size: 48px;
+  line-height: 48px;
+}
+.main__about .about .about__content-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+}
+.main__about .about .about__content-items .item {
+  display: flex;
+  gap: 16px;
+}
+.main__about .about .about__content-items .item__name {
+  font-weight: 600;
+  font-size: 18px;
+}
+.main__about .about .about__content-button {
+  width: -moz-fit-content;
+  width: fit-content;
+  background-color: #e3bc3f;
+  padding: 12px 24px;
+}
+.main__about .about .about__content-button a {
+  color: #363636;
+  text-decoration: none;
+}
+.main__about .about .about__img {
+  flex: 1;
+}
+.main__about .about .about__img img {
+  width: 100%;
+  max-width: 100%;
+}
+.main__ads {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background-color: #01162f;
+  background: url("../assets/imgs/background-ads.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.main__ads .ads__content {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+}
+.main__ads .ads__content .content {
+  margin-bottom: 20px !important;
+}
+.main__ads .ads__content .content h2 {
+  font-size: 48px;
+}
+.main__ads .ads__content .button {
+  width: -moz-fit-content;
+  width: fit-content;
+  background-color: #e3bc3f;
+  padding: 12px 24px;
+  color: #363636 !important;
+  margin: 0 auto;
+}/*# sourceMappingURL=homePage.css.map */

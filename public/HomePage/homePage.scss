@@ -1,0 +1,252 @@
+@import "../styles/variable";
+.main {
+  &__banner {
+    width: 100%;
+    position: relative;
+    .banner__img {
+      width: 100%;
+      height: calc(100vh - 90px);
+      img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+      }
+    }
+    .banner__title {
+      position: absolute;
+      width: 40%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .title {
+        color: $yellow-primary;
+      }
+      .desc {
+        color: $white;
+      }
+      .banner__buttons {
+        display: flex;
+        gap: 16px;
+        .button-lg {
+          background-color: $blue-0a0;
+        }
+        &-login {
+          color: $white;
+          border: 1px solid $yellow-primary;
+          transition: color 0.3s ease;
+          &:hover {
+            color: $yellow-primary;
+          }
+        }
+
+        &-register {
+          color: $blue-0a0;
+          background-color: $yellow-primary !important;
+        }
+      }
+    }
+  }
+  &__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: $blue-0a0;
+    color: $white;
+    width: 100%;
+    height: 150px;
+    position: relative;
+    border: 1px solid $yellow-primary;
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      background-color: $yellow-primary;
+      width: 64px;
+      height: 100%;
+      clip-path: polygon(0 0, 72% 0, 100% 100%, 0% 100%);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      background-color: $yellow-primary;
+      width: 64px;
+      height: 100%;
+      clip-path: polygon(32% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    .total__item {
+      display: flex;
+      gap: 12px;
+      p {
+        font-weight: 600;
+        color: $text-blur;
+        &:last-child {
+          font-size: 20px;
+          font-weight: 600;
+          margin-top: 8px;
+          color: $white;
+        }
+      }
+    }
+  }
+  &__games {
+    background-color: $blue-011;
+    color: $white;
+    padding: 6rem 0;
+    &-title {
+      width: 50%;
+      text-align: center;
+      margin: 0 auto;
+      h2 {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+    }
+    &-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      column-gap: 2rem;
+      row-gap: 2rem;
+      width: 100%;
+      border-radius: 4px;
+      overflow: hidden;
+      .game {
+        position: relative;
+        &:hover {
+          .game__button {
+            display: block;
+          }
+        }
+        &__img {
+          width: 100%;
+          height: 100%;
+          img {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+          }
+        }
+        &__content {
+          position: absolute;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 80%;
+          bottom: 24px;
+          left: 50%;
+          transform: translateX(-50%);
+          &-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+          }
+          text-align: center;
+        }
+        &__button {
+          display: none;
+          position: absolute;
+          z-index: 100;
+          width: 100%;
+          height: 100%;
+          color: $white;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: rgba($color: $white, $alpha: 0.1);
+          transition: display 0.3s ease;
+          a {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: $yellow-primary;
+            color: $white;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+  &__about {
+    background-color: $blue-0a0;
+    .about {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 4rem 0;
+      color: $white;
+      .about__content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        h2 {
+          font-size: 48px;
+          line-height: 48px;
+        }
+        &-items {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          gap: 16px;
+          .item {
+            display: flex;
+            gap: 16px;
+            &__name {
+              font-weight: 600;
+              font-size: 18px;
+            }
+          }
+        }
+        &-button {
+          width: fit-content;
+          background-color: $yellow-primary;
+          padding: 12px 24px;
+          a {
+            color: $button-color;
+            text-decoration: none;
+          }
+        }
+      }
+      .about__img {
+        flex: 1;
+        img {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+  &__ads {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background-color: $blue-011;
+    background: url("../assets/imgs/background-ads.jpg") no-repeat;
+    background-size: cover;
+    background-position: center;
+    .ads__content {
+      position: absolute;
+      width: 70%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: $white;
+      .content {
+        margin-bottom: 20px !important;
+        h2 {
+          font-size: 48px;
+        }
+      }
+      .button {
+        width: fit-content;
+        background-color: $yellow-primary;
+        padding: 12px 24px;
+        color: $button-color !important;
+        margin: 0 auto;
+      }
+    }
+  }
+}
