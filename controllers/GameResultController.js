@@ -1,10 +1,11 @@
+const verifyToken = require("../middleware/auth");
 
 
 module.exports = function (app) {
 
-    app.get('/api/gameResult/:token', (req, res) => {
+    app.post('/api/gameResult', verifyToken, (req, res) => {
         
-        res.json({asdf:req.params.token});
+        console.log(req.user.user_id);
     });
 
 }
