@@ -54,7 +54,7 @@ module.exports = function (app) {
             link,
             image: imagePath,
             type,
-            category_id: 1,
+            category_id,
         };
 
         try {

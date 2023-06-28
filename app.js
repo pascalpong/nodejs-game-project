@@ -1,9 +1,12 @@
 require("dotenv").config();
 require("./config/database").connect();
+
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 //controllers
 const gameController = require("./controllers/GameController");
@@ -13,9 +16,6 @@ const UserController = require("./controllers/UserController");
 gameController(app);
 gameResultController(app);
 UserController(app);
-
-
-const bodyParser = require("body-parser");
 
 app.set("view engine", "ejs");
 
