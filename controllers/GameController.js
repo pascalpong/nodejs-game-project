@@ -134,7 +134,7 @@ module.exports = function (app) {
         try {
             const game = await Games.findById(gameId);
             if (!game) {
-                return res.json({ error: 'Game not found' });
+                return res.status(404).json({ message: statusMessage.notFound });
             }
             const updatedGame = {
                 name,
@@ -151,15 +151,19 @@ module.exports = function (app) {
                 // Remove the old file from storage
                 const oldImagePath = game.image;
                 if (oldImagePath) {
-                    const oldImageFilePath = path.join( __dirname, '..', oldImagePath );
-                    // remove old file
-                    fs.unlink(oldImageFilePath);
+                    const oldImageFilePath = path.join(__dirname, '..', oldImagePath);
+                    try {
+                        await fs.promises.unlink(oldImageFilePath);
+                    } catch (error) {
+                        console.error('Error removing old file:', error);
+                        return res.status(500).json({ message: statusMessage.error });
+                    }
                 }
             }
 
             const response = await Games.findByIdAndUpdate(gameId, updatedGame, { new: true })
             if (response)
-                res.status(200).json({ message: statusMessage.updated });
+                res.status(200).json({ response, message: statusMessage.updated });
             else
                 res.status(404).json({ message: statusMessage.notFound });
 
