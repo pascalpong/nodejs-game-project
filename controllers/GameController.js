@@ -24,7 +24,6 @@ const upload = multer({ storage });
 
 module.exports = function (app) {
 
-    // Example route: GET /api/users
     app.get('/api/games', async (req, res) => {
 
         try {
@@ -37,16 +36,29 @@ module.exports = function (app) {
 
     });
 
+    app.get('/api/games/:id', async (req, res) => {
+
+        const gameId = req.params.id;
+        try {
+            const response = await Games.findOne({ _id:gameId })
+            res.json(response);
+        }
+        catch (error) {
+            if(error) throw error;
+        }
+
+    });
+
     app.post('/api/games', upload.single('image'), async (req, res) => {
         // Check if a file was uploaded
         if (!req.file)
-            return res.status(400).json({ error: "No file uploaded" });
+            return res.json({ error: "No file uploaded" });
 
         // Get the file path
         const imagePath = req.file.path;
 
         // Get other form data
-        const { name, link, type } = req.body;
+        const { name, link, type, category_id } = req.body;
 
         // Create a new game object with the uploaded image path
         const newGame = {
