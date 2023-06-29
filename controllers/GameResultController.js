@@ -1,6 +1,7 @@
 const verifyToken = require("../middleware/auth");
 const Game = require("../models/game");
 const GameResult = require("../models/result");
+const statusMessage = require('../libs/statusMessage');
 
 module.exports = function (app) {
 
@@ -41,7 +42,7 @@ module.exports = function (app) {
         }
         catch (error) {
             console.error(error);
-            throw error;
+            res.status(500).json({message: statusMessage.error});
         }
     });
 };
@@ -49,8 +50,9 @@ module.exports = function (app) {
 gameInfo = async function (gameId) {
     try {
         return await Game.findOne({ _id: gameId });
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error);
-        throw error;
+        res.status(500).json({message: statusMessage.error});
     }
 }

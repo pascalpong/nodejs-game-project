@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const statusMessage = require("../libs/statusMessage")
 
 // Game model
 var Games = require('../models/game');
@@ -27,11 +28,16 @@ module.exports = function (app) {
     app.get('/api/games', async (req, res) => {
 
         try {
+            const protocol = req.connection.encrypted ? 'https' : 'http';
+
             const response = await Games.find({})
-            res.json(response);
+            const jsonResponse  = JSON.parse(JSON.stringify(response))
+            const formatResponse =  jsonResponse.map((item) => ({...item, image: `${protocol}://${req.hostname}:${process.env.API_PORT}/${item.image}`}))
+            res.status(200).json(formatResponse);
         }
         catch (error) {
-            if(error) throw error;
+            console.error(error);
+            res.status(400)
         }
 
     });
@@ -39,26 +45,44 @@ module.exports = function (app) {
     app.get('/api/games/:id', async (req, res) => {
 
         const gameId = req.params.id;
+
         try {
+            const protocol = req.connection.encrypted ? 'https' : 'http';
             const response = await Games.findOne({ _id:gameId })
-            res.json(response);
+                response.image = `${protocol}://${req.hostname}:${process.env.API_PORT}/${response.image}`;
+            res.status(200).json(response);
         }
         catch (error) {
-            if(error) throw error;
+            console.error(error);
+            res.status(400)
         }
 
     });
 
     app.post('/api/games', upload.single('image'), async (req, res) => {
+
         // Check if a file was uploaded
         if (!req.file)
-            return res.json({ error: "No file uploaded" });
+            return res.status(404).json({ message: statusMessage.fileNotFound });
 
         // Get the file path
         const imagePath = req.file.path;
 
         // Get other form data
         const { name, link, type, category_id } = req.body;
+            // Validate form data
+        if (!name) {
+            return res.status(400).json({ message: statusMessage.requireName });
+        }
+        else if(!link) {
+            return res.status(400).json({ message: statusMessage.requireLink });
+        }
+        else if(!type) {
+            return res.status(400).json({ message: statusMessage.requireType });
+        }
+        else if(!category_id) {
+            return res.status(400).json({ message: statusMessage.requireCategory });
+        }
 
         // Create a new game object with the uploaded image path
         const newGame = {
@@ -72,29 +96,30 @@ module.exports = function (app) {
         try {
             const response = await Games(newGame).save()
             if (response)
-                res.json(response);
+                res.status(201).json({response, message: statusMessage.created});
             else
-                res.json({ error: "Game not found" });
+                res.status(404).json({ message: statusMessage.notFound });
         }
         catch {
             console.error(error);
-            res.json({ error: "An error occurred" });
+            res.status(400)
         }
     });
 
     app.delete("/api/games/:id", async (req, res) => {
 
         const gameId = req.params.id;
+
         try {
-            const response = await Games.deleteOne({ __id: gameId })
+            const response = await Games.deleteOne({ _id: gameId });
             if (response)
-              res.json({ message: "Game deleted successfully" });
+              res.status(201).json({ message: statusMessage.deleted });
             else
-              res.json({ error: "Game not found" });
+              res.status(404).json({ message: statusMessage.notFound });
 
         } catch (error) {
-            console.error("Error deleting game:", error);
-            res.json({ error: "An error occurred while deleting the game" });
+            console.error(error);
+            res.status(400)
         }
     });
 
@@ -126,7 +151,7 @@ module.exports = function (app) {
                 // Remove the old file from storage
                 const oldImagePath = game.image;
                 if (oldImagePath) {
-                    const oldImageFilePath = path.join(__dirname, '..', oldImagePath);
+                    const oldImageFilePath = path.join( __dirname, '..', oldImagePath );
                     // remove old file
                     fs.unlink(oldImageFilePath);
                 }
@@ -134,13 +159,13 @@ module.exports = function (app) {
 
             const response = await Games.findByIdAndUpdate(gameId, updatedGame, { new: true })
             if (response)
-                res.json(response);
+                res.status(200).json({ message: statusMessage.updated });
             else
-                res.json({ error: 'Game not found' });
+                res.status(404).json({ message: statusMessage.notFound });
 
         } catch (error) {
-            console.error('Error updating game:', error);
-            res.json({ error: 'An error occurred' });
+            console.error(error);
+            res.status(400)
         }
     });
 

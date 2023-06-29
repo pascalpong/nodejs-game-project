@@ -1,7 +1,7 @@
-var bodyParser = require('body-parser');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const statusMessage = require("../libs/statusMessage");
 
 // importing user model
 const User = require("../models/user");
@@ -11,7 +11,7 @@ module.exports = function (app) {
     app.post("/user", auth, (req, res) => {
         // Access the decoded payload from req.user
         const { user_id } = req.user;
-        res.json({ message: 'Authenticated user', user_id });
+        res.status(200).json({ message: statusMessage.authenticated , user_id });
     });
 
     // Register
@@ -23,14 +23,14 @@ module.exports = function (app) {
 
             // Validate user input
             if (!(email && password && first_name && last_name && username)) {
-                return res.send("All input is required");
+                return res.status(400).json({ message: statusMessage.allInputRequired });
             }
 
             // Check if user already exists
             const oldUser = await User.findOne({ email });
 
             if (oldUser) {
-                return res.send("User Already Exists. Please Login");
+                return res.status(400).json({ message: statusMessage.userExistsPlsLogin });
             }
 
             // Encrypt user password
@@ -60,10 +60,11 @@ module.exports = function (app) {
             await user.save();
 
             // Return new user
-            res.json(user);
+            res.status(200).json({ user, message: statusMessage.registered });
+
         } catch (error) {
             console.error(error);
-            res.json({ error: "An error occurred" });
+            res.status(500).json({ message: statusMessage.error });
         }
     });
 
@@ -96,13 +97,13 @@ module.exports = function (app) {
             await user.save();
 
             // Return user
-                res.json(user);
+                res.status(200).json({ user, message: statusMessage.loggedIn });
             } else {
-                res.send("Invalid Credentials");
+                res.status(401).json({ message: statusMessage.invalid });
             }
         } catch (error) {
             console.error(error);
-            res.json({ error: "An error occurred" });
+            res.status(500).json({ message: statusMessage.error });
         }
     });
 
@@ -117,11 +118,11 @@ module.exports = function (app) {
             if (user) {
                 res.json({ message: "Logged out successfully" });
             } else {
-                res.status(404).json({ error: "User not found" });
+                res.status(404).json({ message: statusMessage.notFound });
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: "An error occurred" });
+            res.status(500).json({ message: statusMessage.error });
         }
     });
 
