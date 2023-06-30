@@ -2,9 +2,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const statusMessage = require("../libs/statusMessage");
+const generateTokens = require("../utils/generateTokens")
+const verifyRefreshToken = require("../middleware/verifyRefreshToken")
 
 // importing user model
 const User = require("../models/user");
+
+//token expiration
+const hours = 48;
+const tokenHour = `${hours}h`;
 
 module.exports = function (app) {
 
@@ -37,7 +43,7 @@ module.exports = function (app) {
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create user in our database
-            const user = await User.create({
+            let user = await User.create({
                 first_name,
                 last_name,
                 username,
@@ -46,25 +52,21 @@ module.exports = function (app) {
                 password_shown: password,
             });
 
-            // Create token
-            const token = jwt.sign(
-            { user_id: user._id, email },
-                process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
+            if(user) {
+
+                // Create token
+                const tokens = await generateTokens(user);
+                const formatUser = JSON.parse(JSON.stringify(user));
+                const { password, password_shown, ...rest } = formatUser;
+
+                // Return new user
+                res.status(200).json({ user: { ...rest, tokens }, message: statusMessage.registered });
+
             }
-            );
-
-            // Save user token
-            user.token = token;
-            await user.save();
-
-            // Return new user
-            res.status(200).json({ user, message: statusMessage.registered });
 
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: statusMessage.error });
+            res.status(500).json({message: error});
         }
     });
 
@@ -76,34 +78,31 @@ module.exports = function (app) {
 
             // Validate user input
             if (!(username && password)) {
-                return res.send("All input is required");
+                return res.status(401).json({ message: statusMessage.allInputRequired });
             }
 
             // Validate if user exists in our database
             const user = await User.findOne({ username });
 
             if (user && (await bcrypt.compare(password, user.password))) {
-            // Create token
-            const token = jwt.sign(
-                { user_id: user._id },
-                    process.env.TOKEN_KEY,
-                {
-                expiresIn: "2h",
-                }
-            );
 
-            // Save user token
-            user.token = token;
-            await user.save();
+                // Create token
+                const tokens = await generateTokens(user);
 
-            // Return user
-                res.status(200).json({ user, message: statusMessage.loggedIn });
+                const userFormat = JSON.parse(JSON.stringify(user));
+                const { password, password_shown, ...rest } = userFormat
+
+                const loggedin_at = new Date;
+                const expire_at = new Date(Date.now() + hours * (60 * 60 * 1000) );
+
+                // Return user
+                res.status(200).json({ user:{ ...rest, tokens, expired_in: tokenHour, loggedin_at, expire_at }, message: statusMessage.loggedIn });
             } else {
                 res.status(401).json({ message: statusMessage.invalid });
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: statusMessage.error });
+            res.status(500).json({message: error});
         }
     });
 
@@ -122,8 +121,15 @@ module.exports = function (app) {
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: statusMessage.error });
+            res.status(500).json({message: error});
         }
+    });
+
+    app.post("/regen-access", verifyRefreshToken, async (req, res) => {
+
+        const tokens = await generateTokens(req.user);
+        res.json(tokens)
+
     });
 
 }

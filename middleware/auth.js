@@ -1,27 +1,32 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const config = process.env;
+const statusMessage = require("../libs/statusMessage")
 
 const verifyToken = async (req, res, next) => {
 
     const token = req.body.token || req.query.token || req.headers.authorization;
+    if (!token) {
+        return res.status(401).json({message: "A token is required for authentication"});
+    }
+
     const realToken = token.split(" ")[1];
 
-    if (!token) {
-        return res.send("A token is required for authentication");
-    }
     try {
-        const decoded = jwt.verify(realToken, config.TOKEN_KEY);
+        const decoded = jwt.verify(realToken, config.ACCESS_TOKEN_PRIVATE_KEY);
         const user = await User.findOne({ _id: decoded.user_id });
         if (!user) {
-            return res.status(403).send("Invalid User");
+            return res.status(404);
+        }
+        else {
+            req.user = decoded;
         }
 
-        req.user = decoded;
         return next();
     }
     catch (err) {
-        return res.send("Invalid Token");
+        console.log(err);
+        return res.status(401).json({message: err});
     }
 };
 

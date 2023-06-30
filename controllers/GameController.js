@@ -55,7 +55,7 @@ module.exports = function (app) {
         }
         catch (error) {
             console.error(error);
-            res.status(400)
+            res.status(500).json({message: error});
         }
 
     });
@@ -103,7 +103,7 @@ module.exports = function (app) {
         }
         catch {
             console.error(error);
-            res.status(400)
+            res.status(500).json({message: error});
         }
     });
 
@@ -120,7 +120,7 @@ module.exports = function (app) {
 
         } catch (error) {
             console.error(error);
-            res.status(400)
+            res.status(500).json({message: error});
         }
     });
 
@@ -170,7 +170,7 @@ module.exports = function (app) {
 
         } catch (error) {
             console.error(error);
-            res.status(400)
+            res.status(500).json({message: error});
         }
     });
 

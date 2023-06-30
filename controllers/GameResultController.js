@@ -42,7 +42,7 @@ module.exports = function (app) {
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({message: statusMessage.error});
+            res.status(500).json({message: error});
         }
     });
 };
@@ -53,6 +53,6 @@ gameInfo = async function (gameId) {
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({message: statusMessage.error});
+        res.status(500).json({message: error});
     }
 }

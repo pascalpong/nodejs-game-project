@@ -22,10 +22,7 @@ const userSchema = new mongoose.Schema({
     },
     password_shown: {
         type: String
-    },
-    token: {
-        type: String
-    },
+    }
 },{
     timestamps: true
 });
