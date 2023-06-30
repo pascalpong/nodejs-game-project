@@ -33,7 +33,7 @@ module.exports = function (app) {
 
             const response = await Games.find({}).sort({ updatedAt: -1 });
             const jsonResponse  = JSON.parse(JSON.stringify(response))
-            const formatResponse =  jsonResponse.map((item) => ({...item, image: `${protocol}://${req.hostname}:${process.env.API_PORT}/${item.image}`}))
+            const formatResponse =  jsonResponse.map((item) => ({...item, image: `${protocol}://${req.hostname}/${item.image}`}))
             res.status(200).json(formatResponse);
         }
         catch (error) {
@@ -50,7 +50,7 @@ module.exports = function (app) {
         try {
             const protocol = req.connection.encrypted ? 'https' : 'http';
             const response = await Games.findOne({ _id:gameId })
-                response.image = `${protocol}://${req.hostname}:${process.env.API_PORT}/${response.image}`;
+                response.image = `${protocol}://${req.hostname}/${response.image}`;
             res.status(200).json(response);
         }
         catch (error) {
