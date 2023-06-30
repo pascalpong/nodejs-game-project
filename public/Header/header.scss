@@ -1,0 +1,55 @@
+@import "../styles/variable";
+
+.header {
+  padding: 16px 0;
+  background-color: $background-color;
+  height: 90px;
+  &-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .header__nav {
+      .nav-items {
+        gap: 16px;
+        .nav-item {
+          padding: 16px;
+          a {
+            color: $white;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            &:hover {
+              color: $yellow-primary;
+            }
+          }
+        }
+      }
+    }
+    .header__buttons {
+      gap: 16px;
+      .header__button {
+        height: 40px;
+        &:hover {
+          box-shadow: inset 0 0 6px 1px $yellow-primary;
+        }
+      }
+      .header__select {
+        height: 40px;
+        .select {
+          height: 100%;
+          padding: 6px 12px;
+          background-color: $blue-0a0;
+          border: $border-button;
+          color: $white;
+          font-weight: 600;
+          &:focus-visible {
+            outline: none;
+          }
+          option {
+            padding: 4px 8px;
+          }
+        }
+      }
+    }
+  }
+}
