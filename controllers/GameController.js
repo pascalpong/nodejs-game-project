@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const statusMessage = require("../libs/statusMessage")
+const statusMessage = require("../libs/statusMessage");
+const verifyToken = require("../middleware/auth");
 
 // Game model
 var Games = require('../models/game');
@@ -30,7 +31,7 @@ module.exports = function (app) {
         try {
             const protocol = req.connection.encrypted ? 'https' : 'http';
 
-            const response = await Games.find({})
+            const response = await Games.find({}).sort({ updatedAt: -1 });
             const jsonResponse  = JSON.parse(JSON.stringify(response))
             const formatResponse =  jsonResponse.map((item) => ({...item, image: `${protocol}://${req.hostname}:${process.env.API_PORT}/${item.image}`}))
             res.status(200).json(formatResponse);
@@ -59,7 +60,7 @@ module.exports = function (app) {
 
     });
 
-    app.post('/api/games', upload.single('image'), async (req, res) => {
+    app.post('/api/games', verifyToken, upload.single('image'), async (req, res) => {
 
         // Check if a file was uploaded
         if (!req.file)
@@ -106,7 +107,7 @@ module.exports = function (app) {
         }
     });
 
-    app.delete("/api/games/:id", async (req, res) => {
+    app.delete("/api/games/:id", verifyToken, async (req, res) => {
 
         const gameId = req.params.id;
 
@@ -123,7 +124,7 @@ module.exports = function (app) {
         }
     });
 
-    app.put('/api/games/:id', upload.single('image'), async (req, res) => {
+    app.put('/api/games/:id', verifyToken, upload.single('image'), async (req, res) => {
 
         const gameId = req.params.id;
         // Get the file path

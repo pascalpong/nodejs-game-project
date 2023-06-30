@@ -20,15 +20,9 @@ const gameSchema = new mongoose.Schema({
     category_id: {
       type: Number,
       required: true,
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    deleted_at: {
-      type: Date,
-      default: null,
-    },
+    }
+},{
+  timestamps: true
 });
 
 

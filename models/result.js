@@ -9,11 +9,9 @@ const resultSchema = new mongoose.Schema({
     },
     result : {
         type:String,
-    },
-    created_at : {
-        type: Date,
-        default: Date.now
-    }
+    }, 
+},{
+    timestamps: true
 });
 
 module.exports = mongoose.model('Result', resultSchema);
