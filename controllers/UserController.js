@@ -49,6 +49,23 @@ module.exports = function (app) {
         }
     })
 
+    app.put("/user/:id", auth, async (req, res) => {
+
+        const userId = req.params.id;
+
+        try {
+            const user = await User.findOne({ _id:userId })
+            const { first_name, last_name } = req.body;
+            const updateUser = { first_name, last_name };
+
+            console.log(req.body);
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message:error})
+        }
+    })
+
     app.delete("/user/:id", auth, async (req, res) => {
 
         const userId = req.params.id;
