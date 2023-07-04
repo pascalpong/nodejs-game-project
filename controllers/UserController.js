@@ -14,6 +14,57 @@ const tokenHour = `${hours}h`;
 
 module.exports = function (app) {
 
+    app.get("/users", async (req, res) => {
+
+        try {
+            const users = await User.find({}).sort({ updatedAt: -1 });
+            const formatUsers = JSON.parse(JSON.stringify(users));
+
+            // new variable without the passwords
+            const theRest =  formatUsers.map(item => {
+                const { password, password_shown, ...theRest } = item
+                return theRest;
+            })
+            res.status(200).json(theRest)
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({message: error})
+        }
+    });
+
+    app.get("/user/:id", auth, async (req, res) => {
+        const userId = req.params.id
+        try {
+
+            const response = await User.findOne({_id: userId})
+            if(response)
+                res.status(200).json(response)
+            else
+                res.status(401).json({message: error})
+
+        } catch (error) {
+            res.status(500).json({message: error})
+            console.log(error)
+        }
+    })
+
+    app.delete("/user/:id", auth, async (req, res) => {
+
+        const userId = req.params.id;
+
+        try {
+            const response = await User.deleteOne({_id: userId})
+            if (response)
+              res.status(201).json({ message: statusMessage.deleted });
+            else
+              res.status(404).json({ message: statusMessage.notFound });
+
+        } catch (error) {
+            res.status(500).json({message: error})
+        }
+    })
+
     app.post("/user", auth, (req, res) => {
         // Access the decoded payload from req.user
         const { user_id } = req.user;
@@ -57,10 +108,14 @@ module.exports = function (app) {
                 // Create token
                 const tokens = await generateTokens(user);
                 const formatUser = JSON.parse(JSON.stringify(user));
+
+                const loggedin_at = new Date;
+                const expire_at = new Date(Date.now() + hours * (60 * 60 * 1000) );
+
                 const { password, password_shown, ...rest } = formatUser;
 
                 // Return new user
-                res.status(200).json({ user: { ...rest, tokens }, message: statusMessage.registered });
+                res.status(200).json({ user: { ...rest, tokens, loggedin_at, expire_at }, message: statusMessage.registered });
 
             }
 

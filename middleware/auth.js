@@ -14,7 +14,7 @@ const verifyToken = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(realToken, config.ACCESS_TOKEN_PRIVATE_KEY);
-        const user = await User.findOne({ _id: decoded.user_id });
+        const user = await User.findOne({ _id: decoded._id });
         if (!user) {
             return res.status(404);
         }
